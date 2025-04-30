@@ -1,32 +1,25 @@
 package main
 
 import (
+	"bank/fileops"
 	"fmt"
-	"os"
-	"strconv"
 )
 
 const accountBalanceFile = "balance.txt"
 
 func main() {
-	balance := readBalanceFromFile()
+	balance := fileops.ReadFloatFromFile(accountBalanceFile)
 
 	fmt.Println("Welcome to the bank")
 
 	for {
-		fmt.Println("What do you want to do?")
-		fmt.Println("1. Check balance")
-		fmt.Println("2. Deposit money")
-		fmt.Println("3. Withdraw money")
-		fmt.Println("4. Print passbook")
-		fmt.Println("5. Exit")
+		presentOptions()
 
 		choice := getUserInput("Your choice")
 
 		switch choice {
 		case 1:
 			fmt.Printf("Your balance: %.2f", balance)
-			continue
 
 		case 2:
 			amount := getUserInput("Amount")
@@ -38,8 +31,6 @@ func main() {
 				fmt.Println("Balance has been added")
 			}
 
-			continue
-
 		case 3:
 			amount := getUserInput("Amount")
 
@@ -50,20 +41,16 @@ func main() {
 				fmt.Println("Balance has been deducted")
 			}
 
-			continue
-
 		case 4:
-			writeBalanceToFile(balance)
-			continue
+			fmt.Println(fileops.ReadFloatFromFile(accountBalanceFile))
 
 		default:
-			fmt.Print("Goodbye")
+			fmt.Println("\nThank you for choosing us!")
 			return
 		}
 
+		fileops.WriteToFile(accountBalanceFile, balance)
 	}
-	fmt.Println()
-	fmt.Println("Thank you for choosing us!")
 }
 
 func getUserInput(infoText string) float64 {
@@ -71,16 +58,4 @@ func getUserInput(infoText string) float64 {
 	fmt.Printf("%v: ", infoText)
 	fmt.Scan(&input)
 	return input
-}
-
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
-}
-
-func readBalanceFromFile() float64 {
-	data, _ := os.ReadFile(accountBalanceFile)
-	balanceText := string(data)
-	balance, _ := strconv.ParseFloat(balanceText, 64)
-	return balance
 }
