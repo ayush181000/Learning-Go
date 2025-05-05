@@ -3,30 +3,89 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"notes/note"
 	"os"
 	"strings"
 )
 
+type saver interface {
+	Save() error
+}
+
 func main() {
-	title, content := getNoteData()
+	// title, content := getNoteData()
+	// todoText := getTodoData()
 
-	userNote, err := note.New(title, content)
+	// userNote, err := note.New(title, content)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
 
-	if err != nil {
-		fmt.Println(err)
-		return
+	// todo, err := todo.New(todoText)
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	// todo.Display()
+	// userNote.Display()
+	// err = saveData(todo)
+
+	// if err != nil {
+	// 	fmt.Println("Saving the todo failed")
+	// 	return
+	// }
+
+	// err = saveData(userNote)
+
+	// if err != nil {
+	// 	fmt.Println("Saving the note failed")
+	// 	return
+	// }
+
+	// fmt.Println("Saving the note succeded")
+
+	// outputData(todo)
+	// outputData(userNote)
+	printSomething(1)
+	printSomething(1.5)
+
+}
+
+func outputData(data interface {
+	Display()
+	saver
+}) {
+	data.Display()
+	saveData(data)
+}
+
+func printSomething(value any) {
+
+	intVal, ok := value.(int)
+
+	if ok {
+		fmt.Println("Integer: ", intVal)
 	}
 
-	userNote.Display()
-	err = userNote.Save()
-
-	if err != nil {
-		fmt.Println("Saving the note failed")
-		return
+	switch value.(type) {
+	case int:
+		fmt.Println("Integer: ", value)
+	case float64:
+		fmt.Println("Float: ", value)
+	case string:
+		fmt.Println(value)
 	}
+}
 
-	fmt.Println("Saving the note succeded")
+func saveData(entity saver) error {
+	return entity.Save()
+}
+
+func getTodoData() string {
+	text := getUserInput("Todo text:")
+	return text
 }
 
 func getNoteData() (string, string) {
