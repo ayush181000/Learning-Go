@@ -2,30 +2,28 @@ package main
 
 import "fmt"
 
-type transformFn func(int) int
-
 func main() {
 
+	fmt.Println(factorial(5))
+
 	numbers := []int{1, 2, 3, 4, 5}
+	fmt.Println(accumulator(0, numbers...))
 
-	fmt.Println(numbers)
-
-	transformNumbers(&numbers, getTransformerFunction())
-
-	fmt.Println(numbers)
-
+	fmt.Println(accumulator(50, 1, -1, 2, 4))
 }
 
-func transformNumbers(numbers *[]int, transform transformFn) {
-	for i := range *numbers {
-		(*numbers)[i] = transform((*numbers)[i])
+func factorial(number int) int {
+	if number == 0 {
+		return 1
 	}
+	return number * factorial(number-1)
 }
 
-func getTransformerFunction() transformFn {
-	return square
-}
+func accumulator(startingValue int, restValues ...int) int {
+	sum := startingValue
+	for _, val := range restValues {
+		sum += val
+	}
 
-func square(x int) int {
-	return x * x
+	return sum
 }
